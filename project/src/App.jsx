@@ -8,6 +8,7 @@ import LearningPath from "./components/LearningPath";
 import AudioLesson from "./components/AudioLesson";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { VoiceCommandProvider } from "./context/VoiceCommandContext.jsx";
 
 Modal.setAppElement("#root"); // Required for react-modal
 
@@ -62,7 +63,7 @@ const Root = () => {
   }, []);
 
   return (
-    <>
+    <VoiceCommandProvider>
       <div className="min-h-screen bg-gray-50">
         <Header />
         <main>
@@ -73,22 +74,22 @@ const Root = () => {
                 Choose Your Learning Path
               </h2>
               <LearningPath />
-              <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
+              {/* <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
                 Listen to Learning Path
-              </button>
+              </button> */}
             </div>
           </div>
-          <div className="py-16 bg-gray-100">
+          {/* <div className="py-16 bg-gray-100">
             <div className="container mx-auto">
               <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
                 Audio Lessons
               </h2>
-              <AudioLesson />
-              <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
+              {/* <AudioLesson /> */}
+          {/* <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
                 Listen to Audio Lessons
-              </button>
-            </div>
-          </div>
+              </button> */}
+          {/* </div> */}
+          {/* </div> */}
           <Features />
         </main>
         <footer className="bg-indigo-900 text-white py-8">
@@ -98,11 +99,12 @@ const Root = () => {
         </footer>
       </div>
 
-      <VoiceCommand handleSpeak={handleSpeak} />
-    </>
+      {/* <VoiceCommand handleSpeak={handleSpeak} /> */}
+    </VoiceCommandProvider>
   );
 };
 
+// Define router with routes for each page
 const router = createBrowserRouter([
   {
     path: "/",
@@ -110,7 +112,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/courses",
-    element: <div>Hello world!</div>,
+    element: <div>Welcome to the Courses page!</div>,
   },
 ]);
 
