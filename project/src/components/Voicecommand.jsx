@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 const VoiceCommand = ({ handleSpeak }) => {
   const [isListening, setIsListening] = useState(true);
@@ -6,6 +7,8 @@ const VoiceCommand = ({ handleSpeak }) => {
   const isRecognitionActive = useRef(false); // Ref to avoid re-renders
   const recognitionStarting = useRef(false); // Tracks if `start` is in progress
   const recognitionRef = useRef(null);
+
+  const navigate = useNavigate();
 
   const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -25,6 +28,11 @@ const VoiceCommand = ({ handleSpeak }) => {
       for (let i = event.resultIndex; i < event.results.length; i++) {
         transcript += event.results[i][0].transcript;
         console.log(transcript);
+
+        // Implement voice to command
+        if (transcript.trim() === "go to courses") {
+          navigate("/courses");
+        }
       }
       setTranscription(transcript);
       handleVoiceCommand(transcript);

@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import Modal from 'react-modal';
-import VoiceCommand from './components/Voicecommand.jsx'; 
-import Header from './components/Header';
-import Hero from './components/Hero';
-import Features from './components/Features';
-import LearningPath from './components/LearningPath';
-import AudioLesson from './components/AudioLesson';
+import React, { useState, useEffect } from "react";
+import Modal from "react-modal";
+import VoiceCommand from "./components/Voicecommand.jsx";
+import Header from "./components/Header";
+import Hero from "./components/Hero";
+import Features from "./components/Features";
+import LearningPath from "./components/LearningPath";
+import AudioLesson from "./components/AudioLesson";
 
-Modal.setAppElement('#root'); // Required for react-modal
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-function App() {
+Modal.setAppElement("#root"); // Required for react-modal
+
+const Root = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Show modal on first visit
@@ -23,7 +25,7 @@ function App() {
 
   // Function to handle Text-to-Speech for a given text
   const handleSpeak = (text) => {
-    if ('speechSynthesis' in window) {
+    if ("speechSynthesis" in window) {
       const utterance = new SpeechSynthesisUtterance(text);
       speechSynthesis.speak(utterance);
     } else {
@@ -36,8 +38,14 @@ function App() {
       const target = event.target;
 
       // Check if the clicked element is a button or has text content
-      if (target.tagName === 'BUTTON' || target.tagName === 'H2' || target.tagName === 'P' || target.tagName === 'SPAN') {
-        const textContent = target.innerText || target.getAttribute('aria-label');
+      if (
+        target.tagName === "BUTTON" ||
+        target.tagName === "H2" ||
+        target.tagName === "P" ||
+        target.tagName === "SPAN"
+      ) {
+        const textContent =
+          target.innerText || target.getAttribute("aria-label");
         if (textContent) {
           handleSpeak(textContent);
         }
@@ -45,19 +53,16 @@ function App() {
     };
 
     // Attach click event listener to the document
-    document.addEventListener('click', handleClick);
+    document.addEventListener("click", handleClick);
 
     // Cleanup the event listener on component unmount
     return () => {
-      document.removeEventListener('click', handleClick);
+      document.removeEventListener("click", handleClick);
     };
   }, []);
 
-
   return (
     <>
-      
-
       <div className="min-h-screen bg-gray-50">
         <Header />
         <main>
@@ -68,9 +73,7 @@ function App() {
                 Choose Your Learning Path
               </h2>
               <LearningPath />
-              <button
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-              >
+              <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
                 Listen to Learning Path
               </button>
             </div>
@@ -81,9 +84,7 @@ function App() {
                 Audio Lessons
               </h2>
               <AudioLesson />
-              <button
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-              >
+              <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
                 Listen to Audio Lessons
               </button>
             </div>
@@ -97,10 +98,24 @@ function App() {
         </footer>
       </div>
 
-      
       <VoiceCommand handleSpeak={handleSpeak} />
     </>
   );
+};
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Root />,
+  },
+  {
+    path: "/courses",
+    element: <div>Hello world!</div>,
+  },
+]);
+
+function App() {
+  return <RouterProvider router={router} />;
 }
 
 export default App;
