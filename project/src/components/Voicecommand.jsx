@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const VoiceCommand = ({ handleSpeak }) => {
-  const [isListening, setIsListening] = useState(false);
+  const [isListening, setIsListening] = useState(true);
   const [transcription, setTranscription] = useState("");
+  const isRecognitionActive = useRef(false); // Ref to avoid re-renders
+  const recognitionStarting = useRef(false); // Tracks if `start` is in progress
+  const recognitionRef = useRef(null);
 
-  // Check if the SpeechRecognition API is available in the browser
   const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -12,28 +14,56 @@ const VoiceCommand = ({ handleSpeak }) => {
     return <div>Your browser does not support speech recognition.</div>;
   }
 
-  // Initialize SpeechRecognition
-  const recognition = new SpeechRecognition();
-  recognition.continuous = true; // Keep listening until stopped
-  recognition.lang = "en-US"; // Language for recognition
-  recognition.interimResults = false; // Get only final results
+  if (!recognitionRef.current) {
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
 
-  // Handle voice commands
+    recognition.onresult = (event) => {
+      let transcript = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+        console.log(transcript);
+      }
+      setTranscription(transcript);
+      handleVoiceCommand(transcript);
+    };
+
+    recognition.onerror = (event) => {
+      console.error("Speech Recognition Error: ", event.error);
+    };
+
+    recognition.onstart = () => {
+      isRecognitionActive.current = true;
+      recognitionStarting.current = false;
+    };
+
+    recognition.onend = () => {
+      isRecognitionActive.current = false;
+      if (isListening && !recognitionStarting.current) {
+        recognitionStarting.current = true;
+        setTimeout(() => recognition.start(), 500);
+      }
+    };
+
+    recognitionRef.current = recognition;
+  }
+
   const handleVoiceCommand = (command) => {
     if (
       command.toLowerCase().includes("start the voice command") &&
       !isListening
     ) {
       handleSpeak("Voice command started");
-      setIsListening(true); // Start active listening mode
+      setIsListening(true);
     } else if (
       command.toLowerCase().includes("stop the voice command") &&
       isListening
     ) {
       handleSpeak("Voice command stopped");
-      setIsListening(false); // Stop active listening mode
+      setIsListening(false);
     } else if (isListening) {
-      // Additional commands processed only when in active listening mode
       if (command.toLowerCase().includes("learn path")) {
         handleSpeak("Navigating to learning path section");
       } else if (command.toLowerCase().includes("audio lessons")) {
@@ -42,30 +72,27 @@ const VoiceCommand = ({ handleSpeak }) => {
     }
   };
 
-  // Event listener for recognition result
-  recognition.onresult = (event) => {
-    let transcript = "";
-    for (let i = event.resultIndex; i < event.results.length; i++) {
-      transcript += event.results[i][0].transcript;
-    }
-    setTranscription(transcript);
-    handleVoiceCommand(transcript);
-  };
-
-  // Handle errors in speech recognition
-  recognition.onerror = (event) => {
-    console.error("Speech Recognition Error: ", event.error);
-  };
-
-  // Effect to manage recognition state
   useEffect(() => {
-    if (isListening) {
-      recognition.start(); // Start listening when "start" command is given
-    } else {
-      recognition.stop(); // Stop listening when "stop" command is given
-    }
-    return () => {
+    const recognition = recognitionRef.current;
+
+    if (
+      isListening &&
+      !isRecognitionActive.current &&
+      !recognitionStarting.current
+    ) {
+      recognitionStarting.current = true;
+      try {
+        recognition.start();
+      } catch (error) {
+        console.warn("Recognition start error:", error);
+        recognitionStarting.current = false;
+      }
+    } else if (!isListening && isRecognitionActive.current) {
       recognition.stop();
+    }
+
+    return () => {
+      if (isRecognitionActive.current) recognition.stop();
     };
   }, [isListening]);
 
