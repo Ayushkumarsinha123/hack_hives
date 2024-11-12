@@ -1,16 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 export default function AccessibilityPopup({ closePopup }) {
+  const [hasSpoken, setHasSpoken] = useState(false); // Track if speech has been played
+
   const handleButtonClick = (value) => {
-    // Set a cookie with the value of the button clicked
     document.cookie = `userAccessibility=${value}; path=/; max-age=${
       60 * 60 * 24 * 30
-    }`; // 30 days
-    closePopup(); // Close the popup after setting the cookie
+    }`;
+    localStorage.setItem("userAccessibility", value);
+    closePopup();
   };
 
+  const speakText = (text) => {
+    if ("speechSynthesis" in window) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert("Your browser does not support text-to-speech.");
+    }
+  };
+
+  // Speak buttons' text only once
+  useEffect(() => {
+    if (!hasSpoken) {
+      const buttonLabels = [
+        "Visual",
+        "Auditory",
+        "Cognitive",
+        "Motor Impairments",
+      ];
+      buttonLabels.forEach((label) => speakText(label));
+      setHasSpoken(true); // Set flag to prevent future speech
+    }
+  }, [hasSpoken]); // Only run if `hasSpoken` changes
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-100">
       <div className="bg-white p-8 rounded-md shadow-md max-w-xs text-center">
         <h2 className="text-2xl font-bold mb-4">
           Choose Your Accessibility Option
