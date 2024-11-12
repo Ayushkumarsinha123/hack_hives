@@ -1,10 +1,26 @@
-import React from 'react';
-import Header from './components/Header';
-import Hero from './components/Hero';
-import Features from './components/Features';
-import LearningPath from './components/LearningPath';
+import React, { useEffect, useState } from "react";
+import Header from "./components/Header";
+import Hero from "./components/Hero";
+import Features from "./components/Features";
+import LearningPath from "./components/LearningPath";
+import AccessibilityPopup from "./components/AccessibilityPopup";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-function App() {
+const Root = () => {
+  const [showPopup, setShowPopup] = useState(false);
+
+  useEffect(() => {
+    const hasVisited = localStorage.getItem("hasVisited");
+    if (!hasVisited) {
+      setShowPopup(true);
+      localStorage.setItem("hasVisited", "true");
+    }
+  }, []);
+
+  const closePopup = () => {
+    setShowPopup(false);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -25,8 +41,25 @@ function App() {
           <p>© 2024 EduAccess. Making education accessible for everyone.</p>
         </div>
       </footer>
+      {showPopup && <AccessibilityPopup closePopup={closePopup} />}
     </div>
   );
+};
+
+// Define the Router
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Root />,
+  },
+  {
+    path: "/yt",
+    element: <div>Hello world!</div>,
+  },
+]);
+
+function App() {
+  return <RouterProvider router={router} />;
 }
 
 export default App;
