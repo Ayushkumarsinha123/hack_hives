@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import VoiceCommand from "./components/Voicecommand.jsx";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import VoiceCommand from "./components/Voicecommand";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Features from "./components/Features";
 import LearningPath from "./components/LearningPath";
-import AudioLesson from "./components/AudioLesson";
 import AccessibilityPopup from "./components/AccessibilityPopup";
+import { VoiceCommandProvider } from "./context/VoiceCommandContext";
 
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { VoiceCommandProvider } from "./context/VoiceCommandContext.jsx";
-
-Modal.setAppElement("#root"); // Required for react-modal
+Modal.setAppElement("#root");
 
 const Root = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,20 +23,11 @@ const Root = () => {
     }
   }, []);
 
+  // Define closePopup here
   const closePopup = () => {
     setShowPopup(false);
   };
 
-  // Show modal on first visit
-  useEffect(() => {
-    const hasVisited = localStorage.getItem("hasVisited");
-    if (!hasVisited) {
-      setIsModalOpen(true);
-      localStorage.setItem("hasVisited", "true");
-    }
-  }, []);
-
-  // Function to handle Text-to-Speech for a given text
   const handleSpeak = (text) => {
     if ("speechSynthesis" in window) {
       const utterance = new SpeechSynthesisUtterance(text);
@@ -51,8 +40,6 @@ const Root = () => {
   useEffect(() => {
     const handleClick = (event) => {
       const target = event.target;
-
-      // Check if the clicked element is a button or has text content
       if (
         target.tagName === "BUTTON" ||
         target.tagName === "H2" ||
@@ -67,10 +54,7 @@ const Root = () => {
       }
     };
 
-    // Attach click event listener to the document
     document.addEventListener("click", handleClick);
-
-    // Cleanup the event listener on component unmount
     return () => {
       document.removeEventListener("click", handleClick);
     };
@@ -91,22 +75,8 @@ const Root = () => {
                 Choose Your Learning Path
               </h2>
               <LearningPath />
-              {/* <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
-                Listen to Learning Path
-              </button> */}
             </div>
           </div>
-          {/* <div className="py-16 bg-gray-100">
-            <div className="container mx-auto">
-              <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
-                Audio Lessons
-              </h2>
-              {/* <AudioLesson /> */}
-          {/* <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
-                Listen to Audio Lessons
-              </button> */}
-          {/* </div> */}
-          {/* </div> */}
           <Features />
         </main>
         <footer className="bg-indigo-900 text-white py-8">
@@ -115,23 +85,26 @@ const Root = () => {
           </div>
         </footer>
         {showPopup && <AccessibilityPopup closePopup={closePopup} />}
+        <VoiceCommand handleSpeak={handleSpeak} />
       </div>
-
-      {/* <VoiceCommand handleSpeak={handleSpeak} /> */}
     </VoiceCommandProvider>
   );
 };
 
-// Define router with routes for each page
+const CoursesPage = () => (
+  <VoiceCommandProvider>
+    {" "}
+    {/* Wrap the Courses page in VoiceCommandProvider */}
+    <div>
+      <h1>Welcome to the Courses page!</h1>
+      <VoiceCommand /> {/* Ensure VoiceCommand is present here as well */}
+    </div>
+  </VoiceCommandProvider>
+);
+
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Root />,
-  },
-  {
-    path: "/courses",
-    element: <div>Welcome to the Courses page!</div>,
-  },
+  { path: "/", element: <Root /> },
+  { path: "/courses", element: <CoursesPage /> },
 ]);
 
 function App() {
