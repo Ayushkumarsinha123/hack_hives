@@ -6,6 +6,7 @@ import Hero from "./components/Hero";
 import Features from "./components/Features";
 import LearningPath from "./components/LearningPath";
 import AudioLesson from "./components/AudioLesson";
+import AccessibilityPopup from "./components/AccessibilityPopup";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { VoiceCommandProvider } from "./context/VoiceCommandContext.jsx";
@@ -14,6 +15,19 @@ Modal.setAppElement("#root"); // Required for react-modal
 
 const Root = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+
+  useEffect(() => {
+    const hasVisited = localStorage.getItem("hasVisited");
+    if (!hasVisited) {
+      setShowPopup(true);
+      localStorage.setItem("hasVisited", "true");
+    }
+  }, []);
+
+  const closePopup = () => {
+    setShowPopup(false);
+  };
 
   // Show modal on first visit
   useEffect(() => {
@@ -100,6 +114,7 @@ const Root = () => {
             <p>© 2024 EduAccess. Making education accessible for everyone.</p>
           </div>
         </footer>
+        {showPopup && <AccessibilityPopup closePopup={closePopup} />}
       </div>
 
       {/* <VoiceCommand handleSpeak={handleSpeak} /> */}
