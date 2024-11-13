@@ -1,5 +1,5 @@
-import React from 'react';
-import { BookOpen, Settings, User } from 'lucide-react';
+import React from "react";
+import { BookOpen, Settings, User } from "lucide-react";
 
 export default function Header() {
   return (
@@ -10,10 +10,6 @@ export default function Header() {
           <span className="text-2xl font-bold">EduAccess</span>
         </div>
         <div className="flex items-center space-x-6">
-          <button className="flex items-center space-x-2 hover:text-indigo-200">
-            <Settings className="h-5 w-5" />
-            <span>Accessibility</span>
-          </button>
           <button className="flex items-center space-x-2 hover:text-indigo-200">
             <User className="h-5 w-5" />
             <span>Profile</span>

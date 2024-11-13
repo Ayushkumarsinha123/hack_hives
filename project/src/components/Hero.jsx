@@ -1,4 +1,5 @@
 import React from "react";
+import { HashLink as Link } from "react-router-hash-link";
 
 export default function Hero() {
   return (
@@ -20,12 +21,11 @@ export default function Hero() {
             unique needs. Discover accessible education that adapts to you.
           </p>
           <div className="flex flex-wrap gap-4">
-            <button className="bg-white text-indigo-900 px-8 py-3 rounded-lg font-semibold hover:bg-indigo-50 transition-colors">
-              Get Started
-            </button>
-            <button className="border-2 border-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-indigo-900 transition-colors">
-              Learn More
-            </button>
+            <Link to="#courses">
+              <button className="bg-white text-indigo-900 px-8 py-3 rounded-lg font-semibold hover:bg-indigo-50 transition-colors">
+                Get Started
+              </button>
+            </Link>
           </div>
         </div>
       </div>

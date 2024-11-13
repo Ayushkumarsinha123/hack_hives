@@ -1,5 +1,5 @@
-import React from 'react';
-import { Volume2, Type, Languages, Brain } from 'lucide-react';
+import React from "react";
+import { Volume2, Type, Languages, Brain } from "lucide-react";
 
 export default function Features() {
   return (
@@ -15,7 +15,8 @@ export default function Features() {
             </div>
             <h3 className="text-xl font-semibold mb-2">Text-to-Speech</h3>
             <p className="text-gray-600">
-              Natural voice narration for all content with adjustable speed and pitch
+              Natural voice narration for all content with adjustable speed and
+              pitch
             </p>
           </div>
           <div className="bg-white p-6 rounded-xl shadow-md">

@@ -70,7 +70,10 @@ const Root = () => {
           <Hero />
           <div className="py-16">
             <div className="container mx-auto">
-              <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
+              <h2
+                className="text-3xl font-bold text-center mb-12 text-gray-800"
+                id="courses"
+              >
                 Choose Your Learning Path
               </h2>
               <LearningPath />
