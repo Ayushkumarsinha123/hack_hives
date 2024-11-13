@@ -169,7 +169,7 @@ const Root = () => {
         </div>
       </footer>
       {showPopup && <AccessibilityPopup closePopup={closePopup} />}
-      <VoiceCommand navigate={navigate} />
+      <VoiceCommand navigate={navigate} closePopup={closePopup} />
     </div>
   );
 };
