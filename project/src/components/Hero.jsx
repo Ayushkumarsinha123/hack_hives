@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useRef } from "react";
 import { HashLink as Link } from "react-router-hash-link";
+import { useNavigate } from "react-router-dom";
 
-export default function Hero() {
+export default function Hero({ onGetStartedClick }) {
+  const navigate = useNavigate();
+  const getStartedRef = useRef(null);
   return (
     <div className="relative bg-indigo-900 text-white py-20">
       <div className="absolute inset-0 overflow-hidden">
@@ -21,11 +24,13 @@ export default function Hero() {
             unique needs. Discover accessible education that adapts to you.
           </p>
           <div className="flex flex-wrap gap-4">
-            <Link to="#courses">
-              <button className="bg-white text-indigo-900 px-8 py-3 rounded-lg font-semibold hover:bg-indigo-50 transition-colors">
-                Get Started
-              </button>
-            </Link>
+            <button
+              ref={getStartedRef}
+              onClick={onGetStartedClick}
+              className="bg-white text-indigo-900 px-8 py-3 rounded-lg font-semibold hover:bg-indigo-50 transition-colors"
+            >
+              Get Started
+            </button>
           </div>
         </div>
       </div>

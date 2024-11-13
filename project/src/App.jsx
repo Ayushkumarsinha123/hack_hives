@@ -126,12 +126,22 @@ import Features from "./components/Features";
 import LearningPath from "./components/LearningPath";
 import AccessibilityPopup from "./components/AccessibilityPopup";
 import { VoiceCommandProvider } from "./context/VoiceCommandContext";
+import CoursesList from "./components/CoursesList";
+import BlindCoursesList from "./components/BlindCoursesList";
+import TextbookPage from "./components/TextbookPage";
+import DeafCoursesList from "./components/DeafCoursesList";
+
 
 Modal.setAppElement("#root");
 
 const Root = () => {
   const navigate = useNavigate(); // Initialize navigate here
   const [showPopup, setShowPopup] = useState(false);
+
+  
+  const handleGetStartedClick = () => {
+    navigate("/courses");
+  };
 
   useEffect(() => {
     const hasVisited = localStorage.getItem("hasVisited");
@@ -149,7 +159,7 @@ const Root = () => {
     <div className="min-h-screen bg-gray-50">
       <Header />
       <main>
-        <Hero />
+        <Hero onGetStartedClick={handleGetStartedClick} />
         <div className="py-16">
           <div className="container mx-auto">
             <h2
@@ -192,7 +202,18 @@ const router = createBrowserRouter([
   },
   {
     path: "/courses",
-    element: <CoursesPage />,
+    element: <CoursesList />,
+  },{
+    path: "/blind-courses",
+    element: <BlindCoursesList />,
+  },
+  {
+    path: "/textbooks",
+    element: <TextbookPage />,
+  },
+  {
+    path: "/deaf-courses",
+    element: <DeafCoursesList />,
   },
 ]);
 
