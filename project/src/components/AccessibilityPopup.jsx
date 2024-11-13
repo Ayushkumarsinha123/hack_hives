@@ -24,10 +24,10 @@ export default function AccessibilityPopup({ closePopup }) {
   useEffect(() => {
     if (!hasSpoken) {
       const buttonLabels = [
-        "Visual",
-        "Auditory",
-        "Cognitive",
-        "Motor Impairments",
+        "Say 1 for Visual",
+        "2 for Auditory",
+        "3 for Cognitive",
+        "4 for Motor Impairments",
       ];
       buttonLabels.forEach((label) => speakText(label));
       setHasSpoken(true); // Set flag to prevent future speech
