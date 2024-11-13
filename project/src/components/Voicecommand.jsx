@@ -105,19 +105,20 @@ const VoiceCommand = ({ handleSpeak }) => {
   }, [isListening]);
 
   return (
-    <div className="voice-command">
-      <button
-        onClick={() => setIsListening(!isListening)}
-        className="bg-blue-500 text-white py-2 px-4 rounded"
-      >
-        {isListening ? "Stop Listening" : "Start Listening"}
-      </button>
-      <p className="mt-4">
-        {transcription
-          ? `You said: ${transcription}`
-          : 'Listening for "start the voice command"...'}
-      </p>
-    </div>
+    // <div className="voice-command">
+    //   <button
+    //     onClick={() => setIsListening(!isListening)}
+    //     className="bg-blue-500 text-white py-2 px-4 rounded"
+    //   >
+    //     {isListening ? "Stop Listening" : "Start Listening"}
+    //   </button>
+    //   <p className="mt-4">
+    //     {transcription
+    //       ? `You said: ${transcription}`
+    //       : 'Listening for "start the voice command"...'}
+    //   </p>
+    // </div>
+    <></>
   );
 };
 
